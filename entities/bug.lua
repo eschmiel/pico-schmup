@@ -1,5 +1,6 @@
 function mk_bug(x,y)
     return {
+        type=ENEMY_TYPE.ZIPPER,
         x=x,
         y=y,
         s=2, --sprite

@@ -58,16 +58,22 @@ function mk_active_state()
     for pos in all(init_enemies_pos) do
         add(init_enemies, mk_bug(pos[1],pos[2]))
     end
+    sb1 = mk_shield_bug(30,60)
+    sb2 =  mk_shield_bug(50,60)
     return {
         p = mk_player(20,110),
         bullets= mk_ent_tbl(),
-        enemies=mk_ent_tbl(init_enemies),
+        -- enemies=mk_ent_tbl({unpack(init_enemies), mk_shield_bug(30,30), mk_shield_bug(50,30)}),
+        enemies = mk_ent_tbl({sb1, sb2, unpack(init_enemies)}),
+        -- rows = mk_ent_tbl(mk_row({sb1, sb2})),
+        row = mk_row({sb1, sb2}),
         explo_mgr=mk_explo_mgr(),
         update = function(self)
             self.p:update()
             self.enemies:update()
             self.bullets:update()
             self.explo_mgr:update()
+            self.row:update()
             handle_input(self)
             handle_col(self)
 
@@ -85,5 +91,26 @@ function mk_active_state()
             self.explo_mgr:draw()
             rect(0,0,127,127,2)
         end,
+    }
+end
+
+function mk_row(enemies)
+    return {
+        spd = 1,
+        d = 1,
+        x = 0,
+    endX = 50,
+        update=function(self)
+            self.x += self.spd * self.d
+            for enemy in all(enemies) do
+                enemy.x+= self.spd * self.d
+                if(self.x > self.endX or self.x < 0) enemy.y += 5
+            end
+
+            if(self.x > self.endX or self.x < 0) then
+                self.d *= -1
+                self.spd+=.02
+            end
+        end
     }
 end
