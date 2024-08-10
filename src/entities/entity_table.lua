@@ -5,7 +5,7 @@ function mk_ent_tbl(init_tbl)
         add(tbl, item)
     end
     
-    ent_tbl = {
+    local ent_tbl = {
         tbl=tbl,
         update=function(self)
             for item in all(self.tbl) do

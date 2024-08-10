@@ -7,10 +7,10 @@ handle_input = function(self)
     if(btnp(4)) then 
         sfx(3)
         self.bullets:add(
-            mk_bullet(self.p.x+2,self.p.y+1)
+            mk_bullet(BULLET_TYPE.PLAYER,self.p.x+2,self.p.y+1)
         )
         self.bullets:add(
-            mk_bullet(self.p.x+5,self.p.y+1)
+            mk_bullet(BULLET_TYPE.PLAYER,self.p.x+5,self.p.y+1)
         )
     end
 end

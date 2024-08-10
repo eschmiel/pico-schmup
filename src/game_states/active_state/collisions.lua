@@ -3,6 +3,7 @@ function handle_col(state)
     wall_col(state)
     bullet_enemy_col(state)
     player_enemy_col(state)
+    player_enemy_bullet_col(state)
 end
 
 --wall collisions
@@ -48,6 +49,17 @@ function player_enemy_col(state)
             sfx(4)
             state.explo_mgr:add(state.p.x,state.p.y)
             state.p.alive=false
+        end
+    end
+end
+
+function player_enemy_bullet_col(state)
+    for bullet in all(state.enemy_bullets.tbl) do
+        if(colliding(bullet:col(), state.p:col()) and state.p.alive) then
+            sfx(4)
+            state.explo_mgr:add(state.p.x,state.p.y)
+            state.p.alive=false
+            state.enemy_bullets:del(bullet)
         end
     end
 end

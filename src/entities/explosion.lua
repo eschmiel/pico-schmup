@@ -20,16 +20,18 @@ function mk_explo_mgr()
     return {
         ent_tbl = mk_ent_tbl(),
         add=function(self, x, y)
+            printh('a','log')
             self.ent_tbl:add(mk_explo(x,y))
         end,
         update=function(self)
-            ent_tbl:update()
-            for explo in all(ent_tbl.tbl) do
-                if(explo.t > 5) ent_tbl:del(explo)
+            printh('b','b')
+            self.ent_tbl:update()
+            for explo in all(self.ent_tbl.tbl) do
+                if(explo.t > 5) self.ent_tbl:del(explo)
             end
         end,
         draw=function(self)
-            ent_tbl:draw()
+            self.ent_tbl:draw()
         end,
         isExploding = function(self)
             return #self.ent_tbl.tbl > 0
