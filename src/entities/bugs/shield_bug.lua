@@ -59,7 +59,7 @@ end
 function mk_shield_bug_shield(shield_bug, offset_x, offset_y)
     return {
         type=COLLIDABLE.SHIELD_BUG_SHIELD,
-        hp=10,
+        hp=15,
         hit_timer = 0,
         dmg_flash = false,
         get_shield_bug=function(self)
@@ -77,7 +77,7 @@ function mk_shield_bug_shield(shield_bug, offset_x, offset_y)
             return {
                 x,
                 y,
-                x+7,
+                x+8,
                 y+4
                }
         end,

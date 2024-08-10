@@ -58,15 +58,14 @@ function mk_active_state()
     for pos in all(init_enemies_pos) do
         add(init_enemies, mk_bug(pos[1],pos[2]))
     end
-    sb1 = mk_shield_bug(15,60)
-    sb2 =  mk_shield_bug(32,60)
     local active_state = {
+        wave=1,
         p = mk_player(20,110),
         bullets= mk_ent_tbl(),
         enemy_bullets=mk_ent_tbl(),
         -- enemies=mk_ent_tbl({unpack(init_enemies), mk_shield_bug(30,30), mk_shield_bug(50,30)}),
         enemies = mk_ent_tbl(),
-        rows = mk_ent_tbl({mk_row({sb1, sb2})}),
+        rows = mk_ent_tbl(),
         -- row = mk_row({sb1, sb2}),
         explo_mgr=mk_explo_mgr(),
         update = function(self)
@@ -82,7 +81,16 @@ function mk_active_state()
             if(not self.p.alive and not self.explo_mgr:isExploding()) then
                 game_state = mk_game_over_state()
             end
-            if(#self.enemies.tbl < 1) game_state = mk_game_over_state(true)
+            if(#self.enemies.tbl < 1) then
+                if(self.wave==1) then
+                    self:setup_wave_2()
+                elseif(self.wave==2) then
+                    self:setup_wave_3()
+                else
+                    game_state = mk_game_over_state(true)
+                end
+                self.wave+=1
+            end
         end,
         
         draw = function(self)
@@ -94,72 +102,72 @@ function mk_active_state()
             self.explo_mgr:draw()
             rect(0,0,127,127,2)
         end,
-    }
+        setup_wave_1=function(self)
+            self.enemies=mk_ent_tbl({unpack(init_enemies)})
+        end,
+        setup_wave_2=function(self)
+            local sb1 = mk_shield_bug(15,60)
+            local sb2 =  mk_shield_bug(32,60)
+            local init_enemies = {}
+            for pos in all(init_enemies_pos) do
+                add(init_enemies, mk_bug(pos[1],pos[2]))
+            end
+            self.enemies=mk_ent_tbl({sb1, sb2, unpack(init_enemies)})      
+            self.rows = mk_ent_tbl({mk_row({sb1, sb2},1,100)})
+        end,
+        setup_wave_3=function(self)
+            
+            local r1 ={
+                mk_shoot_bug(self,30,10),
+                mk_shoot_bug(self,50,10),
+                mk_shoot_bug(self,70,10),
+                mk_shoot_bug(self,90,10),
+                -- mk_shoot_bug(self,11,10),
+                mk_shoot_bug(self,10,10),
+            }
+            local r2 ={
+                mk_shoot_bug(self,30,20),
+                mk_shoot_bug(self,50,20),
+                mk_shoot_bug(self,70,20),
+                mk_shoot_bug(self,90,20),
+                -- mk_shoot_bug(self,110,20),
+                mk_shoot_bug(self,10,20),
+            }
+            local r3 ={
+                mk_shoot_bug(self,30,30),
+                mk_shoot_bug(self,50,30),
+                mk_shoot_bug(self,70,30),
+                mk_shoot_bug(self,90,30),
+                -- mk_shoot_bug(self,110,30),
+                mk_shoot_bug(self,10,30),
+            }
+            local r4 ={
+                mk_shoot_bug(self,30,40),
+                mk_shoot_bug(self,50,40),
+                mk_shoot_bug(self,70,40),
+                mk_shoot_bug(self,90,40),
+                -- mk_shoot_bug(self,110,40),
+                mk_shoot_bug(self,10,40),
+            }
+            local r5 ={
+                mk_shield_bug(15,60), mk_shield_bug(32,60),mk_shield_bug(60,60), mk_shield_bug(77,60)
+            }
 
-    local r1 ={
-        mk_shoot_bug(active_state,30,10),
-        mk_shoot_bug(active_state,50,10),
-        mk_shoot_bug(active_state,70,10),
-        mk_shoot_bug(active_state,90,10),
-        -- mk_shoot_bug(active_state,11,10),
-        mk_shoot_bug(active_state,10,10),
-    }
-    local r2 ={
-        mk_shoot_bug(active_state,30,20),
-        mk_shoot_bug(active_state,50,20),
-        mk_shoot_bug(active_state,70,20),
-        mk_shoot_bug(active_state,90,20),
-        -- mk_shoot_bug(active_state,110,20),
-        mk_shoot_bug(active_state,10,20),
-    }
-    local r3 ={
-        mk_shoot_bug(active_state,30,30),
-        mk_shoot_bug(active_state,50,30),
-        mk_shoot_bug(active_state,70,30),
-        mk_shoot_bug(active_state,90,30),
-        -- mk_shoot_bug(active_state,110,30),
-        mk_shoot_bug(active_state,10,30),
-    }
-    local r4 ={
-        mk_shoot_bug(active_state,30,40),
-        mk_shoot_bug(active_state,50,40),
-        mk_shoot_bug(active_state,70,40),
-        mk_shoot_bug(active_state,90,40),
-        -- mk_shoot_bug(active_state,110,40),
-        mk_shoot_bug(active_state,10,40),
-    }
-    local r5 ={
-        sb1,sb2,mk_shield_bug(60,60), mk_shield_bug(77,60)
+            self.rows=mk_ent_tbl({
+                mk_row(r1,.5,25),mk_row(r2,.5,25),mk_row(r3,.5,25),mk_row(r4,.5,25),mk_row(r5,.2,40)
+            })
 
-    }
-
-    active_state.rows=mk_ent_tbl({
-        mk_row(r1,.5,25),mk_row(r2,.5,25),mk_row(r3,.5,25),mk_row(r4,.5,25),mk_row(r5,.2,40)
-    })
-
-    for row in all(active_state.rows.tbl) do
-        for e in all(row.enemies) do
-            add(active_state.enemies:add(e))
+            for row in all(self.rows.tbl) do
+                for e in all(row.enemies) do
+                    add(self.enemies:add(e))
+                end
+            end
+            
         end
-    end
+    }
+
+    active_state:setup_wave_1()
     
-    -- active_state.enemies = mk_ent_tbl({
-        -- unpack(r1),
-        -- unpack(r2),
-        -- ...r3,
-        -- ...r4
-        -- unpack(r5)
-        -- sb1, 
-        -- sb2,
-        -- mk_shoot_bug(active_state,30,10),
-        -- mk_shoot_bug(active_state,50,10),
-        -- mk_shoot_bug(active_state,30,20),
-        -- mk_shoot_bug(active_state,50,20),
-        -- mk_shoot_bug(active_state,30,30),
-        -- mk_shoot_bug(active_state,50,30),
-        -- mk_shoot_bug(active_state,30,40),
-        -- mk_shoot_bug(active_state,50,40),
-    -- })
 
     return active_state
 end

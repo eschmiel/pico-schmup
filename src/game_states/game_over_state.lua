@@ -3,7 +3,7 @@ function mk_game_over_state(win)
     sfx(5)
     return {
         update=function()
-            if(btnp(5)) game_state = mk_active_state()
+            if(btnp(5)) game_state = mk_title_state()
         end,
 
         draw=function()
