@@ -28,6 +28,7 @@ end
 
 function mk_shooty_bullet(x,y)
     local flash_interval =3
+    sfx(7)
     return{
         t=0,
         flashing = false,

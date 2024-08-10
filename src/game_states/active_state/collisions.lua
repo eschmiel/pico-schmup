@@ -26,6 +26,7 @@ function bullet_enemy_col(state)
                 if(collidable.type == COLLIDABLE.SHIELD_BUG_SHIELD) then
                     if(collidable.hp > 0) then
                         collidable:hit()
+                        sfx(6)
                     else
                         collidable:get_shield_bug().shields:del(collidable)
                         state.explo_mgr:add(collidable:get_x(),collidable:get_y())
