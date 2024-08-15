@@ -20,11 +20,9 @@ function mk_explo_mgr()
     return {
         ent_tbl = mk_ent_tbl(),
         add=function(self, x, y)
-            printh('a','log')
             self.ent_tbl:add(mk_explo(x,y))
         end,
         update=function(self)
-            printh('b','b')
             self.ent_tbl:update()
             for explo in all(self.ent_tbl.tbl) do
                 if(explo.t > 5) self.ent_tbl:del(explo)

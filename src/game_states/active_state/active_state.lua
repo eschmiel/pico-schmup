@@ -161,12 +161,71 @@ function mk_active_state()
                 for e in all(row.enemies) do
                     add(self.enemies:add(e))
                 end
-            end
-            
+            end 
+        end,
+        setup_test_wave=function(self)
+            local sr = mk_step_row({
+                mk_march_bug(30,30),
+                mk_march_bug(40,30),   
+                mk_march_bug(50,30),  
+                mk_march_bug(35,20), 
+                mk_march_bug(45,20)    
+            },45)
+            local sr2 = mk_step_row({
+                mk_march_bug(80,30),
+                mk_march_bug(90,30),   
+                mk_march_bug(100,30),
+                mk_march_bug(70,30),
+                mk_march_bug(110,30),   
+                mk_march_bug(120,30),  
+                mk_march_bug(75,20), 
+                mk_march_bug(105,20),  
+                mk_march_bug(85,20), 
+                mk_march_bug(95,20)    
+                },45)
+            local sr3 = mk_step_row({
+                mk_march_bug(80,0),
+                mk_march_bug(90,0),   
+                mk_march_bug(100,0),
+                mk_march_bug(70,0),
+                mk_march_bug(110,0),   
+                mk_march_bug(120,0),  
+                mk_march_bug(75,-10), 
+                mk_march_bug(105,-10),   
+                mk_march_bug(85,-10), 
+                mk_march_bug(95,-10)    
+                },45)
+            local sr4 = mk_step_row({
+                mk_march_bug(0,0),
+                mk_march_bug(10,0),   
+                mk_march_bug(20,0),
+                mk_march_bug(30,0),
+                mk_march_bug(40,0),   
+                mk_march_bug(50,0),  
+                mk_march_bug(5,-10), 
+                mk_march_bug(15,-10),   
+                mk_march_bug(25,-10), 
+                mk_march_bug(35,-10)    
+                },45)
+            self.rows=mk_ent_tbl({
+                mk_march_bat(20,-135),
+                mk_march_bat(60,-150),
+                mk_march_bat(70,-110),
+                mk_march_bat2(self,10,-150),
+                mk_march_bat2(self,20,-40),
+                mk_march_bat2(self,60,-90),
+                mk_march_bat(5,10),
+                mk_march_bat(70,10)
+            })
+            for row in all(self.rows.tbl) do
+                for e in all(row.enemies) do
+                    add(self.enemies:add(e))
+                end
+            end 
         end
     }
 
-    active_state:setup_wave_1()
+    active_state:setup_test_wave()
     
 
     return active_state
@@ -192,4 +251,59 @@ function mk_row(enemies,spd,endX)
             end
         end
     }
+end
+
+function mk_step_row(enemies,si)
+    return {
+        -- x step distance
+        t = 1, -- timer
+        si = si, -- step interval;
+        d = 1,
+        enemies=enemies,
+        update=function(self)
+            self.t += 1
+            if(self.t%self.si==0) then
+                for enemy in all(self.enemies) do
+                    enemy.x += 5 * self.d
+                    enemy.y += 5
+                end
+                self.d *= -1
+                sfx(8)
+            end
+        end
+    }
+end
+
+function mk_march_bat(x,y)
+    return mk_step_row({
+        mk_march_bug(x,y),
+        mk_march_bug(x+10,y),   
+        mk_march_bug(x+20,y),
+        mk_march_bug(x+30,y),
+        mk_march_bug(x+40,y),  
+        mk_march_bug(x+5,y+10), 
+        mk_march_bug(x+15,y+10),   
+        mk_march_bug(x+25,y+10), 
+        mk_march_bug(x+35,y+10)    
+        },30)
+end
+
+function mk_march_bat2(state,x,y)
+    return mk_step_row({
+        mk_shoot_bug(state,x+5,y-10),
+        mk_shoot_bug(state,x+15,y-10),
+        mk_shoot_bug(state,x+25,y-10),
+        mk_shoot_bug(state,x+35,y-10),
+        mk_march_bug(x,y),
+        mk_march_bug(x+10,y),   
+        mk_march_bug(x+20,y),
+        mk_march_bug(x+30,y),
+        mk_march_bug(x+40,y),  
+        mk_march_bug(x+5,y+10), 
+        mk_march_bug(x+15,y+10),   
+        mk_march_bug(x+25,y+10), 
+        mk_march_bug(x+35,y+10),
+        mk_shield_bug(x+10,y+20),
+        mk_shield_bug(x+30,y+20)
+        },30)
 end
