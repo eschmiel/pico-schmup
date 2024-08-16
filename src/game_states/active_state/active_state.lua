@@ -83,9 +83,9 @@ function mk_active_state()
             end
             if(#self.enemies.tbl < 1) then
                 if(self.wave==1) then
-                    self:setup_wave_2()
+                    self:setup_test_wave_3()
                 elseif(self.wave==2) then
-                    self:setup_wave_3()
+                    self:setup_wave_2()
                 else
                     game_state = mk_game_over_state(true)
                 end
@@ -222,10 +222,54 @@ function mk_active_state()
                     add(self.enemies:add(e))
                 end
             end 
+        end,
+        setup_test_wave_2=function(self)
+            self.enemies = mk_ent_tbl({
+                mk_aimy_bug(self,30,30),
+                mk_aimy_bug(self,100,30),
+                mk_aimy_bug(self,30,40),
+                mk_aimy_bug(self,100,40),
+                mk_aimy_bug(self,60,30),
+                mk_march_bug(40,30),
+                mk_march_bug(50,30),
+                mk_march_bug(70,30),
+                mk_march_bug(80,30),
+                mk_march_bug(40,40),
+                mk_march_bug(50,40),
+                mk_march_bug(40,50),
+                mk_march_bug(70,40),
+                mk_march_bug(80,40),
+                mk_march_bug(50,50),
+                mk_march_bug(70,50),
+                mk_march_bug(80,50)
+
+            })
+        end,
+        setup_test_wave_3=function(self)
+            self.enemies = mk_ent_tbl({
+                mk_aimy_bug(self,30,30),
+                mk_aimy_bug(self,100,30),
+                mk_aimy_bug(self,30,40),
+                mk_aimy_bug(self,100,40),
+                mk_aimy_bug(self,60,30),
+                mk_shoot_bug(self,40,30),
+                mk_shoot_bug(self,50,30),
+                mk_shoot_bug(self,70,30),
+                mk_shoot_bug(self,80,30),
+                mk_shoot_bug(self,40,40),
+                mk_shoot_bug(self,50,40),
+                mk_shoot_bug(self,40,50),
+                mk_shoot_bug(self,70,40),
+                mk_shoot_bug(self,80,40),
+                mk_shoot_bug(self,50,50),
+                mk_shoot_bug(self,70,50),
+                mk_shoot_bug(self,80,50)
+
+            })
         end
     }
 
-    active_state:setup_test_wave()
+    active_state:setup_test_wave_2()
     
 
     return active_state

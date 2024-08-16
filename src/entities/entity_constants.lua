@@ -1,7 +1,8 @@
 ENEMY_TYPE = {
     SHIELD_BUG = 'shield bug',
     ZIPPER = 'zipper',
-    SHOOTY = 'shooty'
+    SHOOTY = 'shooty',
+    AIMY = 'aimy'
 }
 
 COLLIDABLE = {
